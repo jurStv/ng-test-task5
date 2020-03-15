@@ -1,0 +1,19 @@
+{
+	"folders": [
+		{
+			"path": "./apps/ci-build/src/app", "name": "Frontend"
+		},
+		{
+			"path": "./apps/ci-build-api/src/app", "name": "Backend"
+		},
+		{
+			"path": "./libs/models/src", "name": "Models"
+		},
+		{
+			"path": ".", "name": "Root"
+		}
+	],
+	"settings": {
+		"npm-scripts.showStartNotification": false
+	}
+}

@@ -1,0 +1,114 @@
+:host {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  position: relative;
+
+
+  transition: border-color .3s ease-in;
+}
+
+:host(.build-step--not-allowed) {
+  .build-step {
+    &__content,
+    &__status-icon {
+      cursor: not-allowed;
+    }
+  }
+}
+
+::ng-deep {
+  .build-step {
+    &__status-icon {
+      margin-right: 8px;
+      &:hover + .build-step__content {
+        box-shadow: 0 2px 20px 0 rgba(0, 0, 0, 0.2);
+      }
+    }
+    &__content {
+      &:hover {
+        box-shadow: 0 2px 20px 0 rgba(0, 0, 0, 0.2);
+      }
+      cursor: pointer;
+      background-color: #fff;
+      display: flex;
+      position: relative;
+      height: 62px;
+      width: 100%;
+      border-left: 5px solid #ccc;
+      transition: box-shadow border-color .3s ease-in;
+      padding: 15px 10px 15px 10px;
+
+      &--success {
+        border-left: 5px solid #23b4a4;
+      }
+
+      &--fail {
+        border-left: 5px solid #e83f43;
+      }
+
+      &--running {
+        border-left: 5px solid #83aff8;
+      }
+
+      &--active-success {
+        box-shadow: 0 2px 20px 0 #23b4a4;
+      }
+
+      &--active-fail {
+        box-shadow: 0 2px 20px 0 #e83f43;
+      }
+
+      &--active-running {
+        box-shadow: 0 2px 20px 0 #83aff8;
+      }
+
+      &--mini {
+        height: 34px;
+        padding: 7px 8px 6px 5px;
+
+        .build-step__icon { width: 20px; }
+      }
+    }
+    &__content-info {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+    }
+    &__icon {
+      margin-right: 10px;
+      max-width: 30px;
+    }
+    &__duration {
+      display: block;
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background-color: #fff;
+      padding: 0 0 0 5px;
+
+      text-align: right;
+      font-size: 12px;
+      font-weight: 600;
+      color: #999;
+    }
+    &__title,
+    &__info {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-weight: 600;
+    }
+    &__title {
+      font-size: 12px;
+      color: #000;
+      line-height: 12px;
+
+    }
+    &__info {
+      font-size: 12px;
+      color: #999;
+    }
+  }
+}

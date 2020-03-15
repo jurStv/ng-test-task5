@@ -1,0 +1,20 @@
+:host {
+  display: block;
+}
+
+::ng-deep {
+  .build-stat {
+    &__label {
+      font-size: 11px;
+      font-weight: 600;
+      color: #A3A3A3;
+      line-height: 13px;
+    }
+
+    &__info {
+      color: #4C4C4C;
+      font-size: 13px;
+      line-height: 16px;
+    }
+  }
+}

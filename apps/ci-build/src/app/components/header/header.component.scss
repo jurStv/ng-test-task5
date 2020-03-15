@@ -1,0 +1,29 @@
+:host {
+  display: block;
+  background: #fff;
+}
+
+::ng-deep {
+  .header-section {
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #EAEAEA;
+    padding: 10px 13px 10px 35px;
+    & > *:not(:last-child) { margin-right: 20px; }
+    &__content {
+      & > *:not(:last-child) { margin-right: 20px; }
+      display: flex;
+      &--left {
+        order: 0;
+      }
+      &--right {
+        order: 1;
+        margin-left: auto;
+      }
+    }
+
+    &--container {
+      justify-content: space-between;
+    }
+  }
+}

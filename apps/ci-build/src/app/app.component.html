@@ -1,0 +1,181 @@
+<div class="app__container" [style.padding-top]="topOffset" *ciBuildLet="buildChange$ | async as build">
+
+  <!-- Loading animation appears on each screen open -->
+  <ci-build-loading *ngIf="loading$ | async" class="app__loading app__loading--centered"></ci-build-loading>
+
+  <!-- App header -->
+  <ci-build-header class="app__header app__header--sticky">
+
+    <!-- Build stats header section template  -->
+    <ng-template #statsHeaderSection>
+      <ng-container *ngIf="build">
+
+        <!-- Build completed steps stat -->
+        <ci-build-stat>
+          <span ciBuildStatLabel>STEPS</span>
+          <span ciBuildStatInfo>{{ build | stepsProgress }}</span>
+        </ci-build-stat>
+
+        <!-- Stat showing how much time ago build started  -->
+        <ng-container *ngIf="build.data.started">
+          <ng-container *ciBuildLet="build.data.started | interval$: startTimePeriod$ | async | duration: 'biggest': 'full' as startTime">
+            <ng-container *ngIf="startTime">
+              <ci-build-stat>
+                <span ciBuildStatLabel>START TIME</span>
+                <span ciBuildStatInfo>{{ startTime }} ago</span>
+              </ci-build-stat>
+            </ng-container>
+          </ng-container>
+        </ng-container>
+
+        <!-- Build duration stat  -->
+        <ci-build-stat>
+          <span ciBuildStatLabel>DURATION</span>
+          <span ciBuildStatInfo>
+            <ng-container [ngTemplateOutlet]="buildDurationTemplate"></ng-container>
+          </span>
+        </ci-build-stat>
+      </ng-container>
+    </ng-template>
+
+    <!-- Top header section  -->
+    <section ciBuildHeaderSection>
+      <div ciBuildHeaderSectionContentLeft>
+        <ci-build-badge [buildStatus]="build?.status"></ci-build-badge>
+      </div>
+      <div ciBuildHeaderSectionContentLeft *ciBuildIfViewportSize="'large'">
+        <ng-container *ngTemplateOutlet="statsHeaderSection"></ng-container>
+      </div>
+      <div ciBuildHeaderSectionContentRight>
+        <button
+          class="app__header-button app__header-button--stop"
+          (click)="stopBuild()"
+          *ngIf="build && !build.data.finished">
+          <fa-icon *ngIf="stoppingBuild" [icon]="icons.refresh" [spin]="true"></fa-icon>
+          <fa-icon *ngIf="!stoppingBuild" [icon]="icons.timesCircle"></fa-icon>
+          <span>Stop</span>
+        </button>
+        <button
+          class="app__header-button"
+          (click)="restartBuild()"
+          *ngIf="build?.data.finished">
+          <fa-icon [icon]="icons.refresh" [spin]="restartingBuild"></fa-icon>
+          <span>Restart</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- Bottom header section (Shown only on for small or medium screens)  -->
+    <section ciBuildHeaderSection *ciBuildIfViewportSize="'small,medium'">
+      <ng-container *ngTemplateOutlet="statsHeaderSection"></ng-container>
+    </section>
+  </ci-build-header>
+
+  <!-- Build duration time template -->
+  <ng-template #buildDurationTemplate>
+    <ng-container *ngIf="build.data.started">
+      <ng-container *ngIf="build.data.finished; else elseStartedBlock">
+        {{ (build.data.finished - build.data.started) | duration }}
+      </ng-container>
+      <ng-template #elseStartedBlock>
+        {{ build.data.started | interval$ | async | duration }}
+      </ng-template>
+    </ng-container>
+  </ng-template>
+
+  <!-- Step duration time template -->
+  <ng-template #stepDurationTemplate let-step>
+    <ng-container *ngIf="step.startTimeStamp">
+      <ng-container *ngIf="step.finishTimeStamp; else elseStepDurationBlock">
+        {{ (step.finishTimeStamp - step.startTimeStamp) | duration }}
+      </ng-container>
+      <ng-template #elseStepDurationBlock>
+        {{ step.startTimeStamp | interval$ | async | duration }}
+      </ng-template>
+    </ng-container>
+  </ng-template>
+
+  <!-- Steps section -->
+  <div class="app__steps-section" *ngIf="build">
+
+    <!-- Initial builds step -->
+    <div class="app__initial-step" @initialStepAnimation>
+      <ng-container *ciBuildLet="build.steps | initialStep as step">
+        <ci-build-step
+          [status]="step.status"
+          [mini]="true"
+          (activate)="selectStep(0)"
+          [active]="selectedStepIndex === 0">
+          <img ciBuildStepIcon src="/assets/lightning.svg" alt="lightning.svg">
+          <span ciBuildStepTitle>{{ step.name }}</span>
+          <span ciBuildStepDuration>
+            <ng-container *ngTemplateOutlet="stepDurationTemplate; context: { $implicit: step }"></ng-container>
+          </span>
+        </ci-build-step>
+      </ng-container>
+    </div>
+
+    <!-- Other steps -->
+    <section @animateBuildSteps class="app__steps">
+      <ci-build-steps-container>
+        <ci-build-step
+          [status]="step.status"
+          [active]="selectedStepIndex === i + 1"
+          (activate)="selectStep(i + 1)"
+          *ngFor="let step of (build.steps | buildSteps); index as i; trackBy: trackByIndex">
+          <img ciBuildStepIcon src="/assets/code-block.svg" alt="code-block.svg">
+          <span ciBuildStepTitle>{{ step.name }}</span>
+          <span ciBuildStepInfo>Step status: {{ step.status }}</span>
+          <span ciBuildStepDuration>
+            <ng-container *ngTemplateOutlet="stepDurationTemplate; context: { $implicit: step }"></ng-container>
+          </span>
+        </ci-build-step>
+      </ci-build-steps-container>
+    </section>
+  </div>
+
+  <!-- App footer -->
+  <section class="app__footer app__footer--sticky-bottom">
+
+    <!-- Details pane (For now only for Output) -->
+    <ng-container *ciBuildLet="selectedStep$ | async as selectedStep">
+      <ci-build-details class="app__build-details" *ngIf="detailsShown" [status]="selectedStep ? selectedStep.status : build.status" (closeDetails)="closeDetails()">
+
+        <ng-container ciBuildDetailsTitle>
+          <ng-container *ngIf="selectedStep; else elseDetailsTitleBlock">
+            <img src="/assets/code-block.svg" alt="code-block.svg">
+            <span>{{ selectedStep.name }}</span>
+          </ng-container>
+          <ng-template #elseDetailsTitleBlock>
+            <span>Build</span>
+          </ng-template>
+        </ng-container>
+
+        <span ciBuildDetailsDuration>
+          <ng-container *ngIf="selectedStep; else buildDurationTemplate">
+            <ng-container *ngTemplateOutlet="stepDurationTemplate; context: { $implicit: selectedStep }"></ng-container>
+          </ng-container>
+        </span>
+
+        <!-- Details output content (Can show build logs or selected step logs) -->
+        <div ciBuildDetailsContent *ngIf="detailsOpened === 'output'" class="app__build-logs">
+          <ng-container *ciBuildLet="buildDetailsOutput$ | async as logs">
+            <p *ngFor="let log of logs; index as i; trackBy: trackByIndex">
+              {{ log }}
+            </p>
+          </ng-container>
+        </div>
+
+      </ci-build-details>
+    </ng-container>
+
+    <!-- Footer bar with navigation to details pane -->
+    <ci-build-footer>
+      <div ciBuildFooterItem (click)="openOutputDetails()" [active]="detailsOpened === 'output'">
+        <fa-icon [icon]="icons.terminal"></fa-icon>
+        <span>Output</span>
+      </div>
+    </ci-build-footer>
+  </section>
+</div>
+

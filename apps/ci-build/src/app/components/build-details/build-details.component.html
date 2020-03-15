@@ -1,0 +1,10 @@
+<div class="build-details__header">
+    <ci-build-step-status-icon [status]="status"></ci-build-step-status-icon>
+    <ng-content select="[ciBuildDetailsTitle]"></ng-content>
+    <div class="pusher-right"></div>
+    <ng-content select="[ciBuildDetailsDuration]"></ng-content>
+    <fa-icon class="build-details__close-button" [icon]="icon" [size]="'1x'" (click)="handleClick()"></fa-icon>
+</div>
+<div class="build-details__content-container">
+  <ng-content select="[ciBuildDetailsContent]"></ng-content>
+</div>

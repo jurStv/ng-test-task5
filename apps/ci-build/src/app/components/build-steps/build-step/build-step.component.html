@@ -1,0 +1,25 @@
+<ci-build-step-status-icon
+  @stepStatusIconAnimation
+  *ngIf="!mini"
+  class="build-step__status-icon"
+  (click)="handleClick()"
+  [status]="status">
+</ci-build-step-status-icon>
+<div
+  @stepAnimation
+  class="build-step__content"
+  (click)="handleClick()"
+  [class.build-step__content--mini]="mini"
+  [class.build-step__content--success]="success"
+  [class.build-step__content--running]="running"
+  [class.build-step__content--fail]="fail"
+  [class.build-step__content--active-success]="active && success"
+  [class.build-step__content--active-running]="active && running"
+  [class.build-step__content--active-fail]="active && fail">
+  <ng-content select="[ciBuildStepIcon]"></ng-content>
+  <div class="build-step__content-info">
+    <ng-content select="[ciBuildStepTitle]"></ng-content>
+    <ng-content *ngIf="!mini" select="[ciBuildStepInfo]"></ng-content>
+  </div>
+  <ng-content select="[ciBuildStepDuration]"></ng-content>
+</div>

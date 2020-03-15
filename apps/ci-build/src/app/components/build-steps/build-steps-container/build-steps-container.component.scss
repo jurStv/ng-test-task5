@@ -1,0 +1,45 @@
+:host {
+  display: block;
+  position: relative;
+
+  background: linear-gradient(270deg, rgba(150, 150, 150, 0.1) 0%, rgba(0, 0, 0, 0) 57%);
+  padding: 40px 30px 40px 40px;
+}
+
+.build-steps-line {
+  position: absolute;
+  top: 10px;
+  bottom: 10px;
+  border-right: 1px solid #ccc;
+  border-top: 1px solid #ccc;
+  left: 18px;
+  width: 34px;
+  border-top-right-radius: 7px;
+  z-index: 88;
+
+  &:after {
+    content: ' ';
+    display: inline-block;
+    width: 7px;
+    height: 7px;
+    border-radius: 5px;
+    background-color: #ccc;
+    position: absolute;
+    bottom: 0;
+    right: -4px;
+    z-index: 88;
+  }
+}
+
+.build-steps-container {
+  position: relative;
+  z-index: 89;
+}
+
+::ng-deep {
+  .build-steps-container {
+    .build-step:not(:last-child) {
+      margin-bottom: 20px;
+    }
+  }
+}

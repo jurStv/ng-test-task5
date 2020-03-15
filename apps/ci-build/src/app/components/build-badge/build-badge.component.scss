@@ -1,0 +1,35 @@
+:host {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  height: 31px;
+  min-width: 100px;
+  border-radius: 50px;
+  padding: 0 15px;
+  color: white;
+
+  font-weight: 600;
+  font-size: 13px;
+  line-height: 30px;
+  text-align: center;
+
+  transition: width .3s ease-in;
+}
+
+.text {
+  width: 100%;
+}
+
+.pulse {
+  display: block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255);
+
+  animation: pulse-white infinite 1.5s;
+  animation-delay: 1s;
+}
+
+

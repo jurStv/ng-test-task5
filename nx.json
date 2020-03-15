@@ -1,0 +1,28 @@
+{
+  "npmScope": "ci-build",
+  "implicitDependencies": {
+    "angular.json": "*",
+    "package.json": {
+      "dependencies": "*",
+      "devDependencies": "*"
+    },
+    "tsconfig.json": "*",
+    "tslint.json": "*",
+    "nx.json": "*"
+  },
+  "projects": {
+    "ci-build": {
+      "tags": ["scope:ci-build"]
+    },
+    "ci-build-e2e": {
+      "tags": ["scope:ci-build"],
+      "implicitDependencies": ["ci-build"]
+    },
+    "ci-build-api": {
+      "tags": ["scope:ci-build-api"]
+    },
+    "models": {
+      "tags": ["scope:shared"]
+    }
+  }
+}
