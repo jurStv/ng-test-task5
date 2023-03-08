@@ -45,7 +45,7 @@
     "@fortawesome/free-regular-svg-icons": "^5.12.1",
     "@fortawesome/free-solid-svg-icons": "^5.12.1",
     "@nestjs/common": "^6.8.3",
-    "@nestjs/core": "^6.8.3",
+    "@nestjs/core": "^9.0.5",
     "@nestjs/platform-express": "^6.8.3",
     "@nestjs/platform-socket.io": "^6.11.8",
     "@nestjs/websockets": "^6.11.8",
